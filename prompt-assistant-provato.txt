@@ -1,0 +1,39 @@
+
+Ερώτηση: Πόσα ζώα υπάρχουν σε κάθε φάρμα;
+Απάντηση: SELECT f.name AS farm_name, COUNT(a.id) AS total_animals
+      FROM farms f
+      LEFT JOIN animals a ON a.farm_id = f.id
+      GROUP BY f.name;
+
+Ερώτηση: Δείξε μου τα ονόματα των ζώων μαζί με το όνομα της φάρμας στην οποία ανήκουν.
+Απάντηση: SELECT a.name AS animal_name, f.name AS farm_name
+      FROM animals a
+      JOIN farms f ON a.farm_id = f.id;
+
+Ερώτηση: Εμφάνισε το όνομα του ζώου και τον τύπο της συσκευής που φοράει.
+Απάντηση: SELECT a.name AS animal_name, d.type AS device_type
+      FROM animals a
+      JOIN devices d ON d.id_animal = a.id_api;
+
+Ερώτηση: Ποια είναι η μέση θερμοκρασία που κατέγραψαν όλες οι συσκευές;
+Απάντηση: SELECT AVG(temperature) AS avg_temperaturε FROM device_data;
+
+Ερώτηση: Ποια είναι η θερμοκρασία και η υγρασία της φάρμας 'AFarm';
+Απάντηση: SELECT m.temperature, m.humidity
+      FROM meteo_data m
+      JOIN farms f ON m.farm_id_api = f.id_api
+      WHERE f.name = 'AFarm'
+      ORDER BY m.station_timedata DESC
+      LIMIT 1;
+
+Ερώτηση: Πόσο απέχουν οι φάρμες από το κέντρο της Τρίπολης;
+
+Απάντηση: 
+SELECT
+    f.name AS farm_name,
+    ST_Distance_Sphere(
+        ST_Centroid(f.farm_polygon),
+        ST_GeomFromText('POINT(22.375 37.516)', 4326)
+    ) AS distance
+FROM
+    farms f;

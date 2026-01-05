@@ -1,0 +1,19 @@
+Ερώτηση: Ποια είναι τα στατιστικά παραγωγής (μέσο γάλα, διάρκεια, αρνιά, τυπικές αποκλίσεις) 
+της φυλής 6 ανά έτος για τα έτη 2020–2024;
+
+Απάντηση: SELECT p.p_year, b.name AS breed_name,
+    AVG(p.p_fmilk/1000) AS avg_milk,
+    AVG(p.p_fdays) AS avg_days,
+    STD(p.p_fmilk/1000) AS std_milk,
+    STD(p.p_fdays) AS std_days,
+    Avg(p_males+p_females) AS avg_lambsborn,
+    STD(p_males+p_females) AS std_lambsborn,
+    COUNT(*) AS total_records
+FROM production p
+JOIN herds h ON p.p_herd_id = h.h_id
+JOIN breed b ON h.h_breed_id = b.id
+WHERE 
+p.p_year BETWEEN 2020 AND 2024
+AND b.id=6
+GROUP BY p.p_year, b.name
+ORDER BY p.p_year, b.name;
